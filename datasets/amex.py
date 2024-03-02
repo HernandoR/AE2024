@@ -1,8 +1,8 @@
 '''
 Author: HernandoR lzhen.dev@outlook.com
 CreateDate: Do not edit
-LastEditors: HernandoR lzhen.dev@outlook.com
-LastEditTime: 2024-02-21
+LastEditors: Zhen Liu lzhen.dev@outlook.com
+LastEditTime: 2024-03-02
 Description:
 
 Copyright (c) 2024 by HernandoR lzhen.dev@outlook.com, All Rights Reserved.
@@ -12,8 +12,28 @@ An example for dataset loaders, starting with data loading including all the fun
 """
 import torch
 import numpy as np
+from pathlib import Path
 from torch.utils.data import DataLoader, TensorDataset, Dataset
 
+from sklearn.datasets import make_classification
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, f1_score
+import random
+import numpy as np
+import pandas as pd
+
+from pytorch_tabular.utils import make_mixed_dataset, print_metrics
+import os
+
+
+if Path.exists('data/train.parquet'):
+    Datafile=Path('data/train.parquet')
+else:
+    Datafile=Path('data/Amex_ori/Amex Campus Challenge Train 3.csv')
+
+feat_explain = pd.read_excel('data/Amex_ori/Amex Campus.xlsx')
+feats=feat_explain['Feature Name']
+del feat_explain
 
 class AmexDataLoader:
     def __init__(self, config):
@@ -48,24 +68,30 @@ class AmexDataLoader:
 
 
         elif config.data_mode == "random":
-            train_data = torch.randn(self.config.batch_size, self.config.input_channels)
-            train_labels = torch.ones(self.config.batch_size).int()
-            valid_data = train_data
-            valid_labels = train_labels
-            self.len_train_data = train_data.size()[0]
-            self.len_valid_data = valid_data.size()[0]
+            randseed=self.config.seed if self.config.seed else 42
+            data, cat_col_names, num_col_names = make_mixed_dataset(task="classification", n_samples=10000, n_features=len(feats), n_categories=4, weights=[0.8], random_state=42)
+            # change variable names
+            data.columns=feats
+            train, test = train_test_split(data, random_state=randseed)
+            train, val = train_test_split(train, random_state=randseed)
+        #     train_data = torch.randn(self.config.batch_size, self.config.input_channels)
+        #     train_labels = torch.ones(self.config.batch_size).int()
+        #     valid_data = train_data
+        #     valid_labels = train_labels
+        #     self.len_train_data = train_data.size()[0]
+        #     self.len_valid_data = valid_data.size()[0]
 
-            self.train_iterations = (self.len_train_data + self.config.batch_size - 1) // self.config.batch_size
-            self.valid_iterations = (self.len_valid_data + self.config.batch_size - 1) // self.config.batch_size
+        #     self.train_iterations = (self.len_train_data + self.config.batch_size - 1) // self.config.batch_size
+        #     self.valid_iterations = (self.len_valid_data + self.config.batch_size - 1) // self.config.batch_size
 
-            train = TensorDataset(train_data, train_labels)
-            valid = TensorDataset(valid_data, valid_labels)
+        #     train = TensorDataset(train_data, train_labels)
+        #     valid = TensorDataset(valid_data, valid_labels)
 
-            self.train_loader = DataLoader(train, batch_size=config.batch_size, shuffle=True)
-            self.valid_loader = DataLoader(valid, batch_size=config.batch_size, shuffle=False)
+        #     self.train_loader = DataLoader(train, batch_size=config.batch_size, shuffle=True)
+        #     self.valid_loader = DataLoader(valid, batch_size=config.batch_size, shuffle=False)
 
-        else:
-            raise Exception("Please specify in the json a specified mode in data_mode")
+        # else:
+        #     raise Exception("Please specify in the json a specified mode in data_mode")
 
     def plot_samples_per_epoch(self, batch, epoch):
         """

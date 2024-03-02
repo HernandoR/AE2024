@@ -8,6 +8,8 @@ __pycache__/
 # C extensions
 *.so
 
+submission.csv
+
 # Distribution / packaging
 .Python
 env/
@@ -106,7 +108,7 @@ ENV/
 .idea/
 
 # Experiments
-experiments/*
+# experiments/*
 !experiments/.keep
 
 # Pretrained Weights
