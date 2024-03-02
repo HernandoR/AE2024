@@ -68,12 +68,12 @@ class AmexDataLoader:
 
 
         elif config.data_mode == "random":
-            randseed=self.config.seed if self.config.seed else 42
-            data, cat_col_names, num_col_names = make_mixed_dataset(task="classification", n_samples=10000, n_features=len(feats), n_categories=4, weights=[0.8], random_state=42)
-            # change variable names
-            data.columns=feats
-            train, test = train_test_split(data, random_state=randseed)
-            train, val = train_test_split(train, random_state=randseed)
+            # randseed=self.config.seed if self.config.seed else 42
+            # data, cat_col_names, num_col_names = make_mixed_dataset(task="classification", n_samples=10000, n_features=len(feats), n_categories=4, weights=[0.8], random_state=42)
+            # # change variable names
+            # data.columns=feats
+            # train, test = train_test_split(data, random_state=randseed)
+            # train, val = train_test_split(train, random_state=randseed)
         #     train_data = torch.randn(self.config.batch_size, self.config.input_channels)
         #     train_labels = torch.ones(self.config.batch_size).int()
         #     valid_data = train_data

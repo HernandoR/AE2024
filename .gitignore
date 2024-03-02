@@ -10,6 +10,12 @@ __pycache__/
 
 submission.csv
 
+wandb/
+.pt_tmp
+checkpoints/
+lightning_logs/
+.lr_find*
+
 # Distribution / packaging
 .Python
 env/
