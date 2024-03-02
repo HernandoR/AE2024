@@ -16,7 +16,7 @@ Manual data wash in experiments.
 
 run experiments/Manual.ipynb should give you some clean data.
 
-###check out tutorials
+### check out tutorials
 agents is for script that make runs 
 data is for storage
 datasets is to define pytorch dataloader
