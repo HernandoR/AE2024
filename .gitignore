@@ -12,8 +12,11 @@ submission.csv
 
 wandb/
 .pt_tmp
-checkpoints/
+# !checkpoints/*.ckpt
+checkpoints/*/*.sav
+checkpoints/*.ckpt
 lightning_logs/
+AMEX/
 .lr_find*
 
 # Distribution / packaging
@@ -123,4 +126,5 @@ pretrained_weights/*
 
 # Data
 data/*
+!data/Amex_ori/Amex Campus.xlsx
 !data/.keep
