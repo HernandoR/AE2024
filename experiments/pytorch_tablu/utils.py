@@ -1,5 +1,7 @@
 import pandas as pd
 from pytorch_tabular import TabularModel
+# undersampling
+from imblearn.under_sampling import RandomUnderSampler
 
 from typing import Callable
 
@@ -7,7 +9,8 @@ def extractSubmision(input_df:pd.DataFrame,
                      pred_col: str,
                      cm_key='customer',
                      mct_key='merchant',
-                     output_path='submission.csv')->None:
+                     output_path='submission.csv',
+                     chk_len=False)->None:
     '''
     function that extracts the submission file for the AMEX Singapore Hackathon 2024
 
@@ -20,7 +23,7 @@ def extractSubmision(input_df:pd.DataFrame,
     Returns - None
     '''
     print('formate prodiction')
-    if not __name__ == '__main__':
+    if chk_len:
         LEN=len(input_df)
         if LEN!=12604600:
             raise f"miss matchlenth {LEN} "
@@ -65,7 +68,25 @@ def gen_submission(pred_df:pd.DataFrame):
     
     return extractSubmision(pred_df,'predicted_score')
 
+def drop_missing_col(idf:pd.DataFrame,MAX_missingrate=0.3)-> pd.DataFrame:
+    missing_rate=idf.apply(lambda x:sum(x.isnull())/len(x))
+    dropping_cols=missing_rate[missing_rate>missing_rate['merchant_profile_01']].index
+    # print(dropping_cols)
+    idf=idf.drop(columns=dropping_cols)
+    return idf
 
+def preprocess(idf:pd.DataFrame,)-> pd.DataFrame:
+    # drop missing variables
+    idf=drop_missing_col(idf)
+    if 'activation' in idf.columns:
+        # balance
+        # idf['class']=idf.apply(lambda x: x['activation']*2+x['ind_recommended'],axis=1)
+        idf['class']=idf['activation']*2+idf['ind_recommended']
+        y=idf['class']
+        rus = RandomUnderSampler()
+        X_rus, y_rus = rus.fit_resample(idf, y)
+
+        return X_rus
 
 def incr_act_top10(input_df: pd.DataFrame,
                    pred_col: str,
