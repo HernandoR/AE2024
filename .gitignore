@@ -13,7 +13,7 @@ submission.csv
 wandb/
 .pt_tmp
 # !checkpoints/*.ckpt
-checkpoints/*/*.sav
+*.sav
 checkpoints/*.ckpt
 lightning_logs/
 AMEX/
