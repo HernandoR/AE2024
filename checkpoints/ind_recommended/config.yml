@@ -90,7 +90,6 @@ progress_bar: simple
 precision: 32
 trainer_kwargs:
   enable_progress_bar: true
-  max_steps: 1000
 project_name: AMEX
 run_name: ind_recommended
 exp_watch: gradients
