@@ -156,7 +156,7 @@ if __name__=="__main__":
     # Data: DF, cat_col_names, num_col_names
 
     # 1. activate(0.57%) X recom(12.7%) -> 0~3
-    _,data=train_test_split(data,test_size=0.05)
+    # _,data=train_test_split(data,test_size=0.05)
 
     train, test = train_test_split(data, random_state=42)
     train, val = train_test_split(train, random_state=42)
@@ -164,14 +164,14 @@ if __name__=="__main__":
 
     trainer_config = TrainerConfig(
         auto_lr_find=True,  # Runs the LRFinder to automatically derive a learning rate
-        batch_size=1024,
+        batch_size=1024*5,
         max_epochs=100,
         early_stopping="valid_loss",  # Monitor valid_loss for early stopping
         early_stopping_mode="min",  # Set the mode as min because for val_loss, lower is better
-        early_stopping_patience=5,  # No. of epochs of degradation training will wait before terminating
+        early_stopping_patience=10,  # No. of epochs of degradation training will wait before terminating
         checkpoints="valid_loss",  # Save best checkpoint monitoring val_loss
         checkpoints_path="checkpoints",  # Save the checkpoint in the experiment directory
-        checkpoints_save_top_k=5,
+        checkpoints_save_top_k=2,
         progress_bar="simple",
         load_best=True,  # After training, load the best checkpoint
         accelerator=DEVICE,
