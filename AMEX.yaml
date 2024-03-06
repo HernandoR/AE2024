@@ -1,4 +1,4 @@
-name: AMEX
+name: AMEX2
 channels:
   - pytorch
   - defaults

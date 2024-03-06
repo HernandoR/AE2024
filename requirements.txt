@@ -15,3 +15,10 @@
 # fastfastparquet
 # openpyxl
 # # autoPyTorch
+fastparque
+torch
+torchvision
+scikit-learn
+pandas
+pytorch_tabular[extra]
+openpyxl
