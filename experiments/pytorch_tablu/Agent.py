@@ -19,6 +19,8 @@ import pandas as pd
 import wandb
 from rich import print
 
+from imblearn.combine import SMOTETomek, SMOTEENN  
+
 # %%
 from pytorch_tabular import TabularModel
 from pytorch_tabular.models import CategoryEmbeddingModelConfig
@@ -164,7 +166,7 @@ if __name__=="__main__":
 
     trainer_config = TrainerConfig(
         auto_lr_find=True,  # Runs the LRFinder to automatically derive a learning rate
-        batch_size=1024*5,
+        batch_size=1024*2,
         max_epochs=100,
         early_stopping="valid_loss",  # Monitor valid_loss for early stopping
         early_stopping_mode="min",  # Set the mode as min because for val_loss, lower is better

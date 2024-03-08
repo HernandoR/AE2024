@@ -2,6 +2,7 @@ import pandas as pd
 from pytorch_tabular import TabularModel
 # undersampling
 from imblearn.under_sampling import RandomUnderSampler
+from imblearn.combine import SMOTETomek,SMOTEENN
 
 from typing import Callable
 
@@ -68,7 +69,7 @@ def gen_submission(pred_df:pd.DataFrame):
     
     return extractSubmision(pred_df,'predicted_score')
 
-def drop_missing_col(idf:pd.DataFrame,MAX_missingrate=0.3)-> pd.DataFrame:
+def drop_missing_col(idf:pd.DataFrame,MAX_missingrate=0.15)-> pd.DataFrame:
     missing_rate=idf.apply(lambda x:sum(x.isnull())/len(x))
     dropping_cols=missing_rate[missing_rate>missing_rate['merchant_profile_01']].index
     # print(dropping_cols)
@@ -81,10 +82,13 @@ def preprocess(idf:pd.DataFrame,)-> pd.DataFrame:
     if 'activation' in idf.columns:
         # balance
         # idf['class']=idf.apply(lambda x: x['activation']*2+x['ind_recommended'],axis=1)
-        idf['class']=idf['activation']*2+idf['ind_recommended']
+        # idf['class']=idf['activation']*2+idf['ind_recommended']
+        idf['class']=idf['ind_recommended']
         y=idf['class']
-        rus = RandomUnderSampler()
-        X_rus, y_rus = rus.fit_resample(idf, y)
+        # upper sampling not suit for missing data
+        # sampler=SMOTEENN(random_state=42)
+        sampler = RandomUnderSampler()
+        X_rus, y_rus = sampler.fit_resample(idf, y)
 
         return X_rus
 
