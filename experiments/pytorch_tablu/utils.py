@@ -71,7 +71,7 @@ def gen_submission(pred_df:pd.DataFrame):
 
 def drop_missing_col(idf:pd.DataFrame,MAX_missingrate=0.15)-> pd.DataFrame:
     missing_rate=idf.apply(lambda x:sum(x.isnull())/len(x))
-    dropping_cols=missing_rate[missing_rate>missing_rate['merchant_profile_01']].index
+    dropping_cols=missing_rate[missing_rate>0.07].index
     # print(dropping_cols)
     idf=idf.drop(columns=dropping_cols)
     return idf
@@ -80,14 +80,15 @@ def preprocess(idf:pd.DataFrame,)-> pd.DataFrame:
     # drop missing variables
     idf=drop_missing_col(idf)
     if 'activation' in idf.columns:
+        idf.dropna(inplace=True)
         # balance
         # idf['class']=idf.apply(lambda x: x['activation']*2+x['ind_recommended'],axis=1)
         # idf['class']=idf['activation']*2+idf['ind_recommended']
         idf['class']=idf['ind_recommended']
         y=idf['class']
         # upper sampling not suit for missing data
-        # sampler=SMOTEENN(random_state=42)
-        sampler = RandomUnderSampler()
+        sampler=SMOTEENN(random_state=42) # optional Smote
+        # sampler = RandomUnderSampler()
         X_rus, y_rus = sampler.fit_resample(idf, y)
 
         return X_rus
